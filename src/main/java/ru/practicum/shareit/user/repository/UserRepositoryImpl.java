@@ -45,9 +45,10 @@ public class UserRepositoryImpl implements UserRepository {
 
     @Override
     public User updateUser(User user) {
-        if (!user.getEmail().equals(users.get(user.getId()).getEmail())) {
+        String usersEmail = users.get(user.getId()).getEmail();
+        if (!user.getEmail().equals(usersEmail)) {
             if (uniqueEmailSet.add(user.getEmail())) {
-                uniqueEmailSet.remove(users.get(user.getId()).getEmail());
+                uniqueEmailSet.remove(usersEmail);
             } else {
                 throw new EmailIsAlreadyRegisteredException("Пользователь с таким адресом эл. почты уже существует!");
             }
