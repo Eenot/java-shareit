@@ -1,9 +1,10 @@
-package ru.practicum.shareit.user.repository;
+package ru.practicum.shareit.user.repository.inMemory;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 import ru.practicum.shareit.exception.EmailIsAlreadyRegisteredException;
 import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.user.repository.inMemory.UserRepository;
 
 import java.util.ArrayList;
 import java.util.Collection;

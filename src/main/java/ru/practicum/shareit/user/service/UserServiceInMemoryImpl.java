@@ -7,18 +7,16 @@ import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.repository.inMemory.UserRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.user.dto.mapper.UserMapper.*;
 
-
-@Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceInMemoryImpl implements UserService {
 
     private final UserRepository userRepository;
 

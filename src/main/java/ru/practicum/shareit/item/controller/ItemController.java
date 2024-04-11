@@ -11,9 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.service.ItemService;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.LocalDateTime;
 import java.util.Collection;
 
 import static ru.practicum.shareit.constants.Headers.USER_ID;
@@ -56,5 +58,12 @@ public class ItemController {
     public Collection<ItemDto> getItemsBySearching(@RequestParam String text) {
         log.debug("Получение вещей при помощи поиска по запросу: {}", text);
         return itemService.getItemsBySearching(text);
+    }
+
+    @PostMapping("/{itemId}/comment")
+    public CommentDto createCommentToItem(@PathVariable Long itemId, @RequestBody CommentDto comment, HttpServletRequest request) {
+        log.debug("Создание отзыва на вещь от пользователя с id {}", request.getIntHeader(USER_ID));
+        comment.setCreated(LocalDateTime.now());
+        return itemService.addCommentToItem((long) request.getIntHeader(USER_ID), itemId, comment);
     }
 }
