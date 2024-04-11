@@ -2,22 +2,23 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.item.repository.inMemory.ItemRepository;
+import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.item.dto.mapper.ItemMapper.*;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItem;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemUpdate;
 
 @Slf4j
 @RequiredArgsConstructor

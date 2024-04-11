@@ -14,7 +14,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 
 import javax.servlet.http.HttpServletRequest;
-
 import java.util.List;
 
 import static ru.practicum.shareit.constants.Headers.USER_ID;
@@ -41,8 +40,8 @@ public class BookingController {
 
     @GetMapping
     public List<BookingDto> getAllBookingsForUser(@RequestParam(defaultValue = "ALL") String state, HttpServletRequest request) {
-         log.info("Получение информации о бронированиях пользователя.");
-         return bookingService.getAllBookingsByUserId(Long.valueOf(request.getHeader(USER_ID)), state);
+        log.info("Получение информации о бронированиях пользователя.");
+        return bookingService.getAllBookingsByUserId(Long.valueOf(request.getHeader(USER_ID)), state);
     }
 
     @GetMapping("/owner")

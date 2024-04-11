@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import ru.practicum.shareit.user.model.User;
 
-import java.time.LocalDateTime;
-
 @AllArgsConstructor
 @Builder
 public class ItemRequestDto {

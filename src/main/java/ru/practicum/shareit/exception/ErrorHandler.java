@@ -36,7 +36,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String,String> handleUnsupportedStateException(UnsupportedStatusException e) {
+    public Map<String, String> handleUnsupportedStateException(UnsupportedStatusException e) {
         return Map.of("error", "Unknown state: " + e.getMessage());
     }
 }

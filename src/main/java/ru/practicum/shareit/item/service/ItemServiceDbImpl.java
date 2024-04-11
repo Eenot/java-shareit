@@ -9,7 +9,6 @@ import ru.practicum.shareit.booking.dto.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
-
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
@@ -22,12 +21,22 @@ import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.repository.UserRepository;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import static ru.practicum.shareit.item.dto.comment.CommentMapper.toCommentDto;
-import static ru.practicum.shareit.item.dto.mapper.ItemMapper.*;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItem;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDb;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithBookings;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithBookingsAndComments;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithComments;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemUpdate;
 import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUser;
 import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserDto;
 

@@ -10,10 +10,12 @@ import ru.practicum.shareit.user.dto.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
 
-import static ru.practicum.shareit.user.dto.mapper.UserMapper.*;
-
 import java.util.Collection;
 import java.util.stream.Collectors;
+
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUser;
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserDto;
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserUpdate;
 
 @Service
 @Slf4j
