@@ -28,31 +28,36 @@ public class BookingController {
 
     @PostMapping
     public BookingDto createBooking(@RequestBody BookingDto bookingDto, HttpServletRequest request) {
-        log.info("Создание бронирования : {}", bookingDto);
-        return bookingService.addBooking(bookingDto, Long.valueOf(request.getHeader(USER_ID)));
+        Long userId = Long.valueOf(request.getHeader(USER_ID));
+        log.info("Создание бронирования : {}", bookingDto.getId());
+        return bookingService.addBooking(bookingDto, userId);
     }
 
     @PatchMapping("/{bookingId}")
-    public BookingDto approveBooking(@PathVariable Long bookingId, @RequestParam String approved, HttpServletRequest request) {
+    public BookingDto approveBooking(@PathVariable Long bookingId, @RequestParam Boolean approved, HttpServletRequest request) {
+        Long userId = Long.valueOf(request.getHeader(USER_ID));
         log.info("Назначение статуса для бронирования: {}, статус: {}", bookingId, approved);
-        return bookingService.approveBooking(bookingId, Long.valueOf(request.getHeader(USER_ID)), approved);
+        return bookingService.approveBooking(bookingId, userId, approved);
     }
 
     @GetMapping
     public List<BookingDto> getAllBookingsForUser(@RequestParam(defaultValue = "ALL") String state, HttpServletRequest request) {
+        Long userId = Long.valueOf(request.getHeader(USER_ID));
         log.info("Получение информации о бронированиях пользователя.");
-        return bookingService.getAllBookingsByUserId(Long.valueOf(request.getHeader(USER_ID)), state);
+        return bookingService.getAllBookingsByUserId(userId, state);
     }
 
     @GetMapping("/owner")
     public List<BookingDto> getAllBookingsForOwner(@RequestParam(defaultValue = "ALL") String state, HttpServletRequest request) {
+        Long userId = Long.valueOf(request.getHeader(USER_ID));
         log.info("Получение информации о забронированных вещах владельца");
-        return bookingService.getAllBookingsByOwnerId(Long.valueOf(request.getHeader(USER_ID)), state);
+        return bookingService.getAllBookingsByOwnerId(userId, state);
     }
 
     @GetMapping("/{bookingId}")
     public BookingDto getInfoForBooking(@PathVariable Long bookingId, HttpServletRequest request) {
+        Long userId = Long.valueOf(request.getHeader(USER_ID));
         log.info("Получение информации о бронировании: {}", bookingId);
-        return bookingService.getBookingInfo(bookingId, Long.valueOf(request.getHeader(USER_ID)));
+        return bookingService.getBookingInfo(bookingId, userId);
     }
 }

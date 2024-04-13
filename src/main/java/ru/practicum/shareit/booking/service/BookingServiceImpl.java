@@ -66,7 +66,7 @@ public class BookingServiceImpl implements BookingService {
     }
 
     @Override
-    public BookingDto approveBooking(Long bookingId, Long ownerId, String approve) {
+    public BookingDto approveBooking(Long bookingId, Long ownerId, Boolean approve) {
         checkUserId(ownerId);
         BookingDto bookingDto = toBookingDto(bookingRepository.findById(bookingId)
                 .orElseThrow(() -> new EntityNotFoundException("Бронирования с таким id не существует! id: " + bookingId)));
@@ -74,20 +74,13 @@ public class BookingServiceImpl implements BookingService {
             throw new EntityNotFoundException("Пользователь с id " + ownerId + " не является владельцем!");
         }
 
-        switch (approve.toLowerCase()) {
-            case "true": {
-                if (bookingDto.getStatus().equals(BookingStatus.APPROVED)) {
-                    throw new IncorrectDataException("Статус уже подтверждён");
-                }
-                bookingDto.setStatus(BookingStatus.APPROVED);
-                break;
+        if (approve) {
+            if (bookingDto.getStatus() == BookingStatus.APPROVED) {
+                throw new IncorrectDataException("Статус уже подтверждён");
             }
-            case "false": {
-                bookingDto.setStatus(BookingStatus.REJECTED);
-                break;
-            }
-            default:
-                throw new IncorrectDataException("Недопустимое значение для статуса!");
+            bookingDto.setStatus(BookingStatus.APPROVED);
+        } else {
+            bookingDto.setStatus(BookingStatus.REJECTED);
         }
         Booking bookingToUpdate = toBookingUpdate(bookingDto, bookingRepository.findById(bookingId).get());
         bookingRepository.save(bookingToUpdate);

@@ -8,7 +8,7 @@ public interface BookingService {
 
     BookingDto addBooking(BookingDto bookingDto, Long bookerId);
 
-    BookingDto approveBooking(Long bookingId, Long ownerId, String approve);
+    BookingDto approveBooking(Long bookingId, Long ownerId, Boolean approve);
 
     BookingDto getBookingInfo(Long bookingId, Long userId);
 

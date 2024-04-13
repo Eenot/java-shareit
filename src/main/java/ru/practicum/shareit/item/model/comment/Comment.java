@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -27,15 +28,16 @@ public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Long id;
-    String text;
+    private Long id;
+    private String text;
     @OneToOne
     @JoinColumn(name = "author_id")
-    User author;
+    private User author;
     @ManyToOne
     @JoinColumn(name = "item_id")
-    Item item;
-    LocalDateTime created;
+    private Item item;
+    @CreationTimestamp
+    private LocalDateTime created;
 
     public Long itemId() {
         return item != null ? item.getId() : null;
