@@ -2,23 +2,22 @@ package ru.practicum.shareit.user.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.user.repository.inMemory.UserRepository;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.user.dto.mapper.UserMapper.*;
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUser;
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserDto;
+import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserUpdate;
 
-
-@Service
 @Slf4j
 @RequiredArgsConstructor
-public class UserServiceImpl implements UserService {
+public class UserServiceInMemoryImpl implements UserService {
 
     private final UserRepository userRepository;
 

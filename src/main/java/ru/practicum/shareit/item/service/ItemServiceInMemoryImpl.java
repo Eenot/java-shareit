@@ -2,26 +2,27 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
-import ru.practicum.shareit.exception.GatewayHeaderException;
+import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
+import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
+import ru.practicum.shareit.item.repository.inMemory.ItemRepository;
 import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.item.repository.ItemRepository;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.stream.Collectors;
 
-import static ru.practicum.shareit.item.dto.mapper.ItemMapper.*;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItem;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemUpdate;
 
-@Service
 @Slf4j
 @RequiredArgsConstructor
-public class ItemServiceImpl implements ItemService {
+public class ItemServiceInMemoryImpl implements ItemService {
 
     private final UserService userService;
     private final ItemRepository itemRepository;
@@ -71,9 +72,19 @@ public class ItemServiceImpl implements ItemService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public ItemDto checkItemOwner(Long itemId, Long ownerId) {
+        return null;
+    }
+
+    @Override
+    public CommentDto addCommentToItem(Long userId, Long itemId, CommentDto commentDto) {
+        return null;
+    }
+
     private void checkUserId(long userId) {
         if (userId == -1) {
-            throw new GatewayHeaderException("Пользователя с таким header-id не существует!");
+            throw new IncorrectDataException("Пользователя с таким header-id не существует!");
         }
         if (userService.getAllUsers().stream().map(UserDto::getId).noneMatch(x -> x.equals(userId))) {
             throw new EntityNotFoundException("Пользователя с Id" + userId + " не существует");
