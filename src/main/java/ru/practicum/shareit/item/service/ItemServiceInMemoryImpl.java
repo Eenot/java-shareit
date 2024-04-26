@@ -6,6 +6,7 @@ import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.exception.IncorrectDataException;
+import ru.practicum.shareit.exception.UnsupportedMethodException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
@@ -75,12 +76,12 @@ public class ItemServiceInMemoryImpl implements ItemService {
 
     @Override
     public ItemDto checkItemOwner(Long itemId, Long ownerId) {
-        return null;
+        throw new UnsupportedMethodException("inMemory checkItemOwner");
     }
 
     @Override
     public CommentDto addCommentToItem(Long userId, Long itemId, CommentDto commentDto) {
-        return null;
+        throw new UnsupportedMethodException("inMemory addCommentToItem");
     }
 
     private void checkUserId(long userId) {
