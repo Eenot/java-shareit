@@ -7,6 +7,7 @@ import ru.practicum.shareit.booking.model.BookingStatus;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.request.model.ItemRequest;
 import ru.practicum.shareit.user.model.User;
 
 import java.time.LocalDateTime;
@@ -31,6 +32,18 @@ public class ItemMapper {
                 .build();
     }
 
+    public static ItemDto toItemDtoWithRequestId(Item item) {
+        return ItemDto.builder()
+                .id(item.getId())
+                .name(item.getName())
+                .description(item.getDescription())
+                .available(item.getAvailable())
+                .ownerId(item.ownerId() != null ? item.ownerId() : null)
+                .comments(new ArrayList<>())
+                .requestId(item.getRequest().getId())
+                .build();
+    }
+
     public static Item toItem(ItemDto itemDto) {
         return Item.builder()
                 .id(itemDto.getId() != null ? itemDto.getId() : 0)
@@ -47,6 +60,17 @@ public class ItemMapper {
                 .description(itemDto.getDescription())
                 .available(itemDto.getAvailable())
                 .owner(user)
+                .build();
+    }
+
+    public static Item toItemDbWithRequest(ItemDto itemDto, User user, ItemRequest request) {
+        return Item.builder()
+                .id(itemDto.getId() != null ? itemDto.getId() : 0)
+                .name(itemDto.getName())
+                .description(itemDto.getDescription())
+                .available(itemDto.getAvailable())
+                .owner(user)
+                .request(request)
                 .build();
     }
 
@@ -88,7 +112,7 @@ public class ItemMapper {
 
 
     public static ItemDto toItemDtoWithBookingsAndComments(Item item, List<BookingDto> bookings, List<CommentDto> comments) {
-        ItemDto itemDto = null;
+        ItemDto itemDto;
         if (bookings == null) {
             itemDto = toItemDto(item);
         } else {

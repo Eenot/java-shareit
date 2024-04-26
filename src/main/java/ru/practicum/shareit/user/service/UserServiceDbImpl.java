@@ -3,12 +3,11 @@ package ru.practicum.shareit.user.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import ru.practicum.shareit.exception.EmptyFieldException;
-import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.dto.mapper.UserMapper;
 import ru.practicum.shareit.user.model.User;
 import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.validator.UserValidator;
 
 import java.util.Collection;
 import java.util.stream.Collectors;
@@ -23,19 +22,17 @@ import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserUpdate;
 public class UserServiceDbImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserValidator userValidator;
 
     @Override
     public UserDto createUser(UserDto userDto) {
-        if (userDto.getEmail() == null) {
-            throw new EmptyFieldException("Поле адрес эл. почты не может быть пустым!");
-        }
+        userValidator.validateUserData(userDto);
         return toUserDto(userRepository.save(toUser(userDto)));
     }
 
     @Override
     public UserDto getUserById(long id) {
-        User userFromRepos = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователя с id " + id + " не существует!"));
+        User userFromRepos = userValidator.validateUserIdAndReturnIt(id);
         return toUserDto(userFromRepos);
     }
 
@@ -48,16 +45,14 @@ public class UserServiceDbImpl implements UserService {
 
     @Override
     public UserDto updateUser(UserDto userDto) {
-        User userToUpdate = toUserUpdate(userDto, userRepository.findById(userDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Пользователя с id " + userDto.getId() + " не существует!")));
+        User userToUpdate = toUserUpdate(userDto, userValidator.validateUserIdAndReturnIt(userDto.getId()));
         userRepository.save(userToUpdate);
         return toUserDto(userToUpdate);
     }
 
     @Override
     public void removeUser(long id) {
-        User userFromDb = userRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователя с id " + id + " не существует!"));
+        User userFromDb = userValidator.validateUserIdAndReturnIt(id);
         userRepository.deleteById(userFromDb.getId());
     }
 }

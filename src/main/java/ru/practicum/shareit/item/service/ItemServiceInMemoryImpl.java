@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.exception.IncorrectDataException;
@@ -54,7 +55,7 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItemsByUserId(long userId) {
+    public Collection<ItemDto> getItemsByUserId(long userId, Pageable page) {
         checkUserId(userId);
         return itemRepository.getItemsByUserId(userId).stream()
                 .map(ItemMapper::toItemDto)
@@ -62,7 +63,7 @@ public class ItemServiceInMemoryImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItemsBySearching(String text) {
+    public Collection<ItemDto> getItemsBySearching(String text, Pageable page) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }

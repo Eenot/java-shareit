@@ -2,6 +2,8 @@ package ru.practicum.shareit.item.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -13,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.service.ItemService;
+import ru.practicum.shareit.validator.PageableValidator;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
@@ -28,6 +31,7 @@ import static ru.practicum.shareit.constants.Headers.USER_ID;
 public class ItemController {
 
     private final ItemService itemService;
+    private final PageableValidator pageableValidator;
 
     @PostMapping
     public ItemDto createItem(@RequestBody ItemDto itemDto, HttpServletRequest request) {
@@ -49,15 +53,23 @@ public class ItemController {
     }
 
     @GetMapping()
-    public Collection<ItemDto> getUserItems(HttpServletRequest request) {
+    public Collection<ItemDto> getUserItems(@RequestParam(defaultValue = "0") Integer from,
+                                            @RequestParam(defaultValue = "10") Integer size,
+                                            HttpServletRequest request) {
+        pageableValidator.checkingPageableParams(from, size);
         log.debug("Получение всех вещей пользователя с id {}", request.getIntHeader(USER_ID));
-        return itemService.getItemsByUserId(request.getIntHeader(USER_ID));
+        Pageable page = PageRequest.of(from / size, size);
+        return itemService.getItemsByUserId(request.getIntHeader(USER_ID), page);
     }
 
     @GetMapping("/search")
-    public Collection<ItemDto> getItemsBySearching(@RequestParam String text) {
+    public Collection<ItemDto> getItemsBySearching(@RequestParam(defaultValue = "0") Integer from,
+                                                   @RequestParam(defaultValue = "10") Integer size,
+                                                   @RequestParam String text) {
+        pageableValidator.checkingPageableParams(from, size);
         log.debug("Получение вещей при помощи поиска по запросу: {}", text);
-        return itemService.getItemsBySearching(text);
+        Pageable page = PageRequest.of(from / size, size);
+        return itemService.getItemsBySearching(text, page);
     }
 
     @PostMapping("/{itemId}/comment")
