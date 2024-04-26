@@ -19,8 +19,6 @@ import ru.practicum.shareit.validator.PageableValidator;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
-import static ru.practicum.shareit.constants.Headers.USER_ID;
-
 @RestController
 @RequestMapping(path = "/bookings")
 @Slf4j
@@ -48,7 +46,7 @@ public class BookingController {
                                                   @RequestParam(defaultValue = "10") Integer size,
                                                   HttpServletRequest request) {
         pageableValidator.checkingPageableParams(from, size);
-        Long userId = Long.valueOf(request.getHeader(USER_ID));
+        Long userId = Long.valueOf(request.getIntHeader("X-Sharer-User-Id"));
         log.info("Получение информации о бронированиях пользователя");
         Pageable page = PageRequest.of(from / size, size);
         return bookingService.getAllBookingsByUserId(userId, state, page);
@@ -60,7 +58,7 @@ public class BookingController {
                                                    @RequestParam(defaultValue = "10") Integer size,
                                                    HttpServletRequest request) {
         pageableValidator.checkingPageableParams(from, size);
-        Long userId = Long.valueOf(request.getHeader(USER_ID));
+        Long userId = Long.valueOf(request.getIntHeader("X-Sharer-User-Id"));
         log.info("Получение информации о забронированных вещах владельца");
         Pageable page = PageRequest.of(from / size, size);
         return bookingService.getAllBookingsByOwnerId(userId, state, page);

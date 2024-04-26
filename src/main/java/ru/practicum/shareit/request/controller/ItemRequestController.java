@@ -19,9 +19,6 @@ import ru.practicum.shareit.validator.PageableValidator;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 
-import static ru.practicum.shareit.constants.Headers.USER_ID;
-
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(path = "/requests")
@@ -34,13 +31,13 @@ public class ItemRequestController {
     @PostMapping
     public ItemRequestDto createNewRequest(@RequestBody ItemRequestDto requestDto, HttpServletRequest request) {
         log.debug("Создание запроса на вещь: {}", requestDto);
-        return itemRequestService.createNewRequest(requestDto, (long) request.getIntHeader(USER_ID));
+        return itemRequestService.createNewRequest(requestDto, (long) request.getIntHeader("X-Sharer-User-Id"));
     }
 
     @GetMapping
     public Collection<ItemRequestDto> getAllUserItemsWithResponses(HttpServletRequest request) {
         log.debug("Получение списка запросов пользователя!");
-        return itemRequestService.getAllUserRequestsWithResponses((long) request.getIntHeader(USER_ID));
+        return itemRequestService.getAllUserRequestsWithResponses((long) request.getIntHeader("X-Sharer-User-Id"));
     }
 
     @GetMapping("/all")
@@ -50,7 +47,7 @@ public class ItemRequestController {
         pageableValidator.checkingPageableParams(from, size);
         log.debug("Получение списка всех созданных запросов!");
         Pageable page = PageRequest.of(from, size, Sort.by("creationDate").descending());
-        return itemRequestService.getAllRequestsToResponse((long) request.getIntHeader(USER_ID), page);
+        return itemRequestService.getAllRequestsToResponse((long) request.getIntHeader("X-Sharer-User-Id"), page);
     }
 
     @GetMapping("/{requestId}")
