@@ -27,8 +27,8 @@ public class ItemRepositoryInMemoryImpl implements ItemRepository {
     @Override
     public Item createItem(Item item, long userId) {
         item.setId(++itemId);
-        item.setOwner(userRepository.getUserById(userId));
-        items.compute(userId, (owner, userItems) -> {
+        item.setOwner((userRepository.getUserById(userId)));
+        items.compute(userId, (ownerId, userItems) -> {
             if (userItems == null) {
                 userItems = new ArrayList<>();
             }
@@ -42,7 +42,7 @@ public class ItemRepositoryInMemoryImpl implements ItemRepository {
     @Override
     public Item updateItem(Item item, long userId) {
         if (userId != item.getOwner().getId()) {
-            throw new EntityNotFoundException("Некорректный id владельца!");
+            throw new EntityNotFoundException("Id владельца некорректен!");
         }
 
         int index = findItemIndexInList(itemId, userId);
@@ -56,7 +56,6 @@ public class ItemRepositoryInMemoryImpl implements ItemRepository {
         for (long userId : items.keySet()) {
             item = items.get(userId).stream().filter(x -> x.getId() == itemId).findFirst().orElse(null);
         }
-
         return item;
     }
 
@@ -68,14 +67,12 @@ public class ItemRepositoryInMemoryImpl implements ItemRepository {
     @Override
     public Collection<Item> getItemsBySearching(String text) {
         Collection<Item> availableItems = new ArrayList<>();
-
         for (long userId : items.keySet()) {
             availableItems.addAll(items.get(userId).stream()
                     .filter(x -> x.getAvailable().equals(true))
                     .filter(x -> x.getDescription().toLowerCase().contains(text))
                     .collect(Collectors.toList()));
         }
-
         return availableItems;
     }
 
