@@ -20,8 +20,10 @@ import ru.practicum.shareit.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.anyLong;
+import static org.mockito.Mockito.when;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
 
 @ExtendWith(MockitoExtension.class)
