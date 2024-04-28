@@ -33,7 +33,6 @@ public class BookingMapper {
         }
         return bookingDto;
     }
-
     public static Booking toBookingDb(BookingDto bookingDto, Item item, User booker) {
         return Booking.builder()
                 .id(bookingDto.getId() != null ? bookingDto.getId() : 0L)
@@ -44,7 +43,6 @@ public class BookingMapper {
                 .booker(booker)
                 .build();
     }
-
     public static Booking toBookingUpdate(BookingDto bookingDto, Booking booking) {
         Booking bookingUpdate = Booking.builder()
                 .id(booking.getId())
@@ -52,7 +50,6 @@ public class BookingMapper {
                 .end(booking.getEnd())
                 .status(bookingDto.getStatus() != null ? bookingDto.getStatus() : booking.getStatus())
                 .build();
-
         if (bookingDto.getItem() != null) {
             Item item = toItem(bookingDto.getItem());
             bookingUpdate.setItem(item);
@@ -63,12 +60,10 @@ public class BookingMapper {
         }
         return bookingUpdate;
     }
-
     public static BookingLiteDto toBookingLiteDto(BookingDto bookingDto) {
         if (bookingDto == null) {
             return null;
         }
-
         BookingLiteDto bookingLiteDto = BookingLiteDto.builder()
                 .id(bookingDto.getId())
                 .start(bookingDto.getStart())

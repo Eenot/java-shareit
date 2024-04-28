@@ -60,9 +60,9 @@ class ItemServiceInMemoryImplTest {
     @Test
     void create_whenDataIsIncorrect_thenThrowEmptyFieldExceptionException() {
         EmptyFieldException emptyFieldException = assertThrows(EmptyFieldException.class,
-                () -> itemServiceInMemory.createItem(toItemDto(new Item()), 1L), "exceptions are diff");
+                () -> itemServiceInMemory.createItem(toItemDto(new Item()), 1L), "Сообщения различаются!");
 
-        assertEquals(emptyFieldException.getMessage(), "Null fields in ItemDto element!", "messages are diff");
+        assertEquals(emptyFieldException.getMessage(), "Поля не могут быть пусты!", "Сообщения различаются!");
     }
 
     @Test

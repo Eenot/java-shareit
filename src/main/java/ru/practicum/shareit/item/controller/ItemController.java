@@ -21,6 +21,9 @@ import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 import java.util.Collection;
 
+import static ru.practicum.shareit.constants.Headers.USER_ID;
+
+
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -33,20 +36,20 @@ public class ItemController {
     @PostMapping
     public ItemDto createItem(@RequestBody ItemDto itemDto, HttpServletRequest request) {
         log.debug("Создание элемента {}", itemDto);
-        return itemService.createItem(itemDto, request.getIntHeader("X-Sharer-User-Id"));
+        return itemService.createItem(itemDto, request.getIntHeader(USER_ID));
     }
 
     @PatchMapping("/{itemId}")
     public ItemDto updateItem(@PathVariable long itemId, @RequestBody ItemDto itemDto, HttpServletRequest request) {
         log.debug("Обновление элемента с id {}", itemId);
         itemDto.setId(itemId);
-        return itemService.updateItem(itemDto, request.getIntHeader("X-Sharer-User-Id"));
+        return itemService.updateItem(itemDto, request.getIntHeader(USER_ID));
     }
 
     @GetMapping("/{itemId}")
     public ItemDto getItemById(@PathVariable long itemId, HttpServletRequest request) {
         log.debug("Получение элемента с id : {} ", itemId);
-        return itemService.getItemById(itemId, request.getIntHeader("X-Sharer-User-Id"));
+        return itemService.getItemById(itemId, request.getIntHeader(USER_ID));
     }
 
     @GetMapping()
@@ -54,9 +57,9 @@ public class ItemController {
                                             @RequestParam(defaultValue = "10") Integer size,
                                             HttpServletRequest request) {
         pageableValidator.checkingPageableParams(from, size);
-        log.debug("Получение всех вещей пользователя с id {}", request.getIntHeader("X-Sharer-User-Id"));
+        log.debug("Получение всех вещей пользователя с id {}", request.getIntHeader(USER_ID));
         Pageable page = PageRequest.of(from / size, size);
-        return itemService.getItemsByUserId(request.getIntHeader("X-Sharer-User-Id"), page);
+        return itemService.getItemsByUserId(request.getIntHeader(USER_ID), page);
     }
 
     @GetMapping("/search")
@@ -71,8 +74,8 @@ public class ItemController {
 
     @PostMapping("/{itemId}/comment")
     public CommentDto createCommentToItem(@PathVariable Long itemId, @RequestBody CommentDto comment, HttpServletRequest request) {
-        log.debug("Создание отзыва на вещь от пользователя с id {}", request.getIntHeader("X-Sharer-User-Id"));
+        log.debug("Создание отзыва на вещь от пользователя с id {}", request.getIntHeader(USER_ID));
         comment.setCreated(LocalDateTime.now());
-        return itemService.addCommentToItem((long) request.getIntHeader("X-Sharer-User-Id"), itemId, comment);
+        return itemService.addCommentToItem((long) request.getIntHeader(USER_ID), itemId, comment);
     }
 }
