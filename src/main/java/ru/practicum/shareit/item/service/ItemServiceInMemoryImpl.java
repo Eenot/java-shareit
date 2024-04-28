@@ -4,14 +4,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Pageable;
 import ru.practicum.shareit.exception.EmptyFieldException;
-import ru.practicum.shareit.exception.EntityNotFoundException;
-import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.exception.UnsupportedMethodException;
 import ru.practicum.shareit.item.dto.ItemDto;
 import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.dto.mapper.ItemMapper;
 import ru.practicum.shareit.item.repository.inMemory.ItemRepository;
-import ru.practicum.shareit.user.dto.UserDto;
 import ru.practicum.shareit.user.service.UserService;
 
 import java.util.ArrayList;

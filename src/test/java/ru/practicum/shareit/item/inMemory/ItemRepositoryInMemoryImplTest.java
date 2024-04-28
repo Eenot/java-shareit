@@ -14,7 +14,7 @@ import ru.practicum.shareit.user.repository.inMemory.UserRepositoryInMemoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
