@@ -14,7 +14,7 @@ import ru.practicum.shareit.user.repository.inMemory.UserRepositoryInMemoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.Mockito.when;
 
@@ -87,7 +87,7 @@ class ItemRepositoryInMemoryImplTest {
     }
 
     @Test
-    void getItemsBySearching() {
+    void getItemsBySearch() {
         itemRepositoryInMemory.createItem(expectedItem, 1L);
 
         List<Item> itemsBySearch = new ArrayList<>(itemRepositoryInMemory.getItemsBySearching("desc"));

@@ -20,10 +20,8 @@ import ru.practicum.shareit.user.model.User;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.mockito.Mockito.anyLong;
-import static org.mockito.Mockito.when;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.*;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
 
 @ExtendWith(MockitoExtension.class)
@@ -62,7 +60,7 @@ class ItemServiceInMemoryImplTest {
     @Test
     void create_whenDataIsIncorrect_thenThrowEmptyFieldExceptionException() {
         EmptyFieldException emptyFieldException = assertThrows(EmptyFieldException.class,
-                () -> itemServiceInMemory.createItem(toItemDto(new Item()), 1L), "Сообщения различаются!");
+                () -> itemServiceInMemory.createItem(toItemDto(new Item()), 1L), "Исключения различаются!");
 
         assertEquals(emptyFieldException.getMessage(), "Поля не могут быть пусты!", "Сообщения различаются!");
     }

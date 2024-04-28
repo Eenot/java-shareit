@@ -9,8 +9,7 @@ import ru.practicum.shareit.user.repository.inMemory.UserRepositoryInMemoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 class UserRepositoryInMemoryImplTest {
 

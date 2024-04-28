@@ -155,6 +155,7 @@ public class ItemServiceDbImpl implements ItemService {
 
     @Override
     public CommentDto addCommentToItem(Long userId, Long itemId, CommentDto commentDto) {
+
         User author = userValidator.validateUserIdAndReturnIt(userId);
         itemValidator.validateItemId(itemId);
         itemValidator.validateCommentData(commentDto);

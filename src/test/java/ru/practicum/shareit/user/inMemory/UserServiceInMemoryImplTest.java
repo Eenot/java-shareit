@@ -14,11 +14,9 @@ import ru.practicum.shareit.user.service.UserServiceInMemoryImpl;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyLong;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserDto;
 
 @ExtendWith(MockitoExtension.class)
