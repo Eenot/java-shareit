@@ -28,7 +28,7 @@ class BookingMapperTest {
 
 
     @BeforeEach
-    public void fillData() {
+    public void shouldFillDataTest() {
         booker = User.builder()
                 .name("name")
                 .id(1L)
@@ -59,7 +59,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingDto() {
+    void shouldConvertToBookingDto() {
         BookingDto actual = BookingMapper.toBookingDto(booking);
 
         assertEquals(actual.getStatus(), booking.getStatus());
@@ -68,7 +68,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingDb() {
+    void shouldConvertToBookingDb() {
         Booking actual = BookingMapper.toBookingDb(bookingDto, item, booker);
 
         assertEquals(actual.getStatus(), bookingDto.getStatus());
@@ -77,7 +77,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingUpdate() {
+    void shouldConvertToBookingUpdate() {
         bookingDto.setStatus(BookingStatus.APPROVED);
         Booking actual = BookingMapper.toBookingUpdate(bookingDto, booking);
 
@@ -92,7 +92,7 @@ class BookingMapperTest {
     }
 
     @Test
-    void toBookingLiteDto() {
+    void shouldConvertToBookingLiteDto() {
         BookingLiteDto actual = BookingMapper.toBookingLiteDto(bookingDto);
 
         assertEquals(actual.getStatus(), bookingDto.getStatus());

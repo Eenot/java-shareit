@@ -2,6 +2,7 @@ package ru.practicum.shareit.item.model.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -26,6 +27,7 @@ import java.util.Objects;
 @Builder
 @AllArgsConstructor
 @Table(name = "comments")
+@EqualsAndHashCode
 public class Comment {
 
     @Id
@@ -42,18 +44,5 @@ public class Comment {
 
     public Long itemId() {
         return item != null ? item.getId() : null;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Comment comment = (Comment) o;
-        return id.equals(comment.id) && created.equals(comment.created);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, created);
     }
 }

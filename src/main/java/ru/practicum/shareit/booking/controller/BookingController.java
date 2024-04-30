@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -33,22 +34,21 @@ public class BookingController {
     @PostMapping
     public BookingDto createBooking(@RequestBody BookingDto bookingDto, HttpServletRequest request) {
         log.info("Создание бронирования : {}", bookingDto.getId());
-        return bookingService.addBooking(bookingDto, (long) (request.getIntHeader("X-Sharer-User-Id")));
+        return bookingService.addBooking(bookingDto, (long) (request.getIntHeader(USER_ID)));
     }
 
     @PatchMapping("/{bookingId}")
     public BookingDto approveBooking(@PathVariable Long bookingId, @RequestParam String approved, HttpServletRequest request) {
         log.info("Назначение статуса для бронирования: {}, статус: {}", bookingId, approved);
-        return bookingService.approveBooking(bookingId, (long) (request.getIntHeader("X-Sharer-User-Id")), approved);
+        return bookingService.approveBooking(bookingId, (long) (request.getIntHeader(USER_ID)), approved);
     }
 
     @GetMapping
     public List<BookingDto> getAllBookingsForUser(@RequestParam(defaultValue = "ALL") String state,
                                                   @RequestParam(defaultValue = "0") Integer from,
                                                   @RequestParam(defaultValue = "10") Integer size,
-                                                  HttpServletRequest request) {
+                                                  @RequestHeader(USER_ID) Long userId) {
         pageableValidator.checkingPageableParams(from, size);
-        Long userId = Long.valueOf(request.getHeader(USER_ID));
         log.info("Получение информации о бронированиях пользователя");
         Pageable page = PageRequest.of(from / size, size);
         return bookingService.getAllBookingsByUserId(userId, state, page);
@@ -69,6 +69,6 @@ public class BookingController {
     @GetMapping("/{bookingId}")
     public BookingDto getInfoForBooking(@PathVariable Long bookingId, HttpServletRequest request) {
         log.info("Получение информации о бронировании: {}", bookingId);
-        return bookingService.getBookingInfo(bookingId, (long) request.getIntHeader("X-Sharer-User-Id"));
+        return bookingService.getBookingInfo(bookingId, (long) request.getIntHeader(USER_ID));
     }
 }

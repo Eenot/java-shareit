@@ -45,7 +45,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void createBooking() {
+    void shouldCreateBookingTest() {
         BookingDto bookingToCreate = new BookingDto();
         when(bookingService.addBooking(any(BookingDto.class), anyLong())).thenReturn(bookingToCreate);
 
@@ -62,7 +62,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void approveBooking() {
+    void shouldApproveBookingTest() {
         BookingDto bookingToCreate = new BookingDto();
         bookingToCreate.setId(1L);
         BookingDto updatedBooking = BookingDto.builder()
@@ -85,7 +85,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void getAllBookingsForUser() {
+    void shouldGetAllBookingsForUserTest() {
         mockMvc.perform(get("/bookings")
                         .param("from", "1")
                         .param("size", "1")
@@ -99,7 +99,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void getAllBookingsForOwner() {
+    void shouldGetAllBookingsForOwnerTest() {
         mockMvc.perform(get("/bookings/owner")
                         .param("from", "1")
                         .param("size", "1")
@@ -113,7 +113,7 @@ class BookingControllerTest {
 
     @SneakyThrows
     @Test
-    void getInfoForBooking() {
+    void shouldGetInfoForBookingTest() {
         long bookingId = 0L;
         mockMvc.perform(get("/bookings/{bookingId}", bookingId))
                 .andExpect(status().isOk());

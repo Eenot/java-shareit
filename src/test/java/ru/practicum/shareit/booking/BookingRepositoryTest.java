@@ -31,6 +31,7 @@ class BookingRepositoryTest {
     long ownerId;
     long itemId;
 
+
     @Autowired
     UserRepository userRepository;
 
@@ -41,7 +42,8 @@ class BookingRepositoryTest {
     ItemRepository itemRepository;
 
     @BeforeEach
-    public void addRequests() {
+    public void shouldAddRequests() {
+        LocalDateTime timeStamp = LocalDateTime.now();
         User booker = User.builder()
                 .email("mail1@mail.ru")
                 .name("name1")
@@ -66,59 +68,59 @@ class BookingRepositoryTest {
 
         bookingRepository.save(Booking.builder()
                 .booker(booker)
-                .end(LocalDateTime.now().minusDays(1))
-                .start(LocalDateTime.now().minusDays(2))
+                .end(timeStamp.minusDays(1))
+                .start(timeStamp.minusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .booker(booker)
-                .start(LocalDateTime.now().plusDays(1))
-                .end(LocalDateTime.now().plusDays(2))
+                .start(timeStamp.plusDays(1))
+                .end(timeStamp.plusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .booker(booker)
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(2))
+                .start(timeStamp.minusDays(1))
+                .end(timeStamp.plusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .booker(booker)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
+                .start(timeStamp)
+                .end(timeStamp)
                 .status(BookingStatus.REJECTED)
                 .build());
         bookingRepository.save(Booking.builder()
                 .item(item)
                 .booker(booker)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
+                .start(timeStamp)
+                .end(timeStamp)
                 .status(BookingStatus.WAITING)
                 .build());
 
 
         bookingRepository.save(Booking.builder()
                 .item(item)
-                .end(LocalDateTime.now().minusDays(1))
-                .start(LocalDateTime.now().minusDays(2))
+                .end(timeStamp.minusDays(1))
+                .start(timeStamp.minusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .item(item)
-                .start(LocalDateTime.now().plusDays(1))
-                .end(LocalDateTime.now().plusDays(2))
+                .start(timeStamp.plusDays(1))
+                .end(timeStamp.plusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .item(item)
-                .start(LocalDateTime.now().minusDays(1))
-                .end(LocalDateTime.now().plusDays(2))
+                .start(timeStamp.minusDays(1))
+                .end(timeStamp.plusDays(2))
                 .build());
         bookingRepository.save(Booking.builder()
                 .item(item)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
+                .start(timeStamp)
+                .end(timeStamp)
                 .status(BookingStatus.REJECTED)
                 .build());
         bookingRepository.save(Booking.builder()
                 .item(item)
-                .start(LocalDateTime.now())
-                .end(LocalDateTime.now())
+                .start(timeStamp)
+                .end(timeStamp)
                 .status(BookingStatus.WAITING)
                 .build());
     }

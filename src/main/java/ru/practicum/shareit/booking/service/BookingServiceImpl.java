@@ -33,7 +33,7 @@ import static ru.practicum.shareit.booking.dto.mapper.BookingMapper.toBookingUpd
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
 
-    private static final Sort SORT_BY_START_DESC = Sort.by(Sort.Direction.DESC, "start").descending();
+    private static final Sort SORT_BY_START_DESC = Sort.by(Sort.Direction.DESC, "start");
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final UserValidator userValidator;

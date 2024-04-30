@@ -3,10 +3,13 @@ package ru.practicum.shareit.request.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.annotation.CreatedDate;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -32,6 +35,7 @@ import java.util.Objects;
 @Table(name = "requests")
 @AllArgsConstructor
 @NoArgsConstructor
+@EqualsAndHashCode
 public class ItemRequest {
 
     @Id
@@ -42,20 +46,8 @@ public class ItemRequest {
     @JoinColumn(name = "requester_id")
     private User requester;
     @Column(name = "creation_date")
+    @CreationTimestamp
     private LocalDateTime creationDate;
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Item> responsesToRequest;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemRequest that = (ItemRequest) o;
-        return id == that.id;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
