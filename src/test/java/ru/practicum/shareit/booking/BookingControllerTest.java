@@ -26,6 +26,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.constants.Headers.USER_ID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -90,7 +91,7 @@ class BookingControllerTest {
                         .param("from", "1")
                         .param("size", "1")
                         .param("state", "ALL")
-                        .header("X-Sharer-User-Id", "1"))
+                        .header(USER_ID, "1"))
                 .andExpect(status().isOk());
         doNothing().when(pageableValidator).checkingPageableParams(1, 1);
 
@@ -104,7 +105,7 @@ class BookingControllerTest {
                         .param("from", "1")
                         .param("size", "1")
                         .param("state", "ALL")
-                        .header("X-Sharer-User-Id", "1"))
+                        .header(USER_ID, "1"))
                 .andExpect(status().isOk());
         doNothing().when(pageableValidator).checkingPageableParams(1, 1);
 
