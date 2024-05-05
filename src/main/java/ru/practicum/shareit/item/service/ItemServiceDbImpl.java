@@ -2,12 +2,13 @@ package ru.practicum.shareit.item.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.dto.mapper.BookingMapper;
 import ru.practicum.shareit.booking.repository.BookingRepository;
-import ru.practicum.shareit.exception.EmptyFieldException;
 import ru.practicum.shareit.exception.EntityNotFoundException;
 import ru.practicum.shareit.exception.IncorrectDataException;
 import ru.practicum.shareit.item.dto.ItemDto;
@@ -17,8 +18,11 @@ import ru.practicum.shareit.item.dto.mapper.ItemMapper;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
-import ru.practicum.shareit.user.dto.UserDto;
-import ru.practicum.shareit.user.repository.UserRepository;
+import ru.practicum.shareit.request.model.ItemRequest;
+import ru.practicum.shareit.request.repository.ItemRequestRepository;
+import ru.practicum.shareit.user.model.User;
+import ru.practicum.shareit.validator.ItemValidator;
+import ru.practicum.shareit.validator.UserValidator;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -32,48 +36,51 @@ import java.util.stream.Collectors;
 import static ru.practicum.shareit.item.dto.comment.CommentMapper.toCommentDto;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItem;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDb;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDbWithRequest;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDto;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithBookings;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithBookingsAndComments;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithComments;
+import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemDtoWithRequestId;
 import static ru.practicum.shareit.item.dto.mapper.ItemMapper.toItemUpdate;
-import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUser;
-import static ru.practicum.shareit.user.dto.mapper.UserMapper.toUserDto;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class ItemServiceDbImpl implements ItemService {
 
-    private final UserRepository userRepository;
     private final ItemRepository itemRepository;
     private final BookingRepository bookingRepository;
     private final CommentRepository commentRepository;
+    private final ItemRequestRepository itemRequestRepository;
+    private final UserValidator userValidator;
+    private final ItemValidator itemValidator;
 
     @Override
     public ItemDto createItem(ItemDto itemDto, long userId) {
-        if (itemDto.getAvailable() == null || itemDto.getDescription() == null || itemDto.getName() == null) {
-            throw new EmptyFieldException("Поля для ввода не должны быть NULL!");
+        itemValidator.validateItemData(itemDto);
+        User userFromDb = userValidator.validateUserIdAndReturnIt(userId);
+        if (itemDto.getRequestId() != null) {
+            ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId())
+                    .orElseThrow(() -> new EntityNotFoundException("Запроса на вещь с таким ID не обнаружено! ID запроса: " + itemDto.getRequestId()));
+            return toItemDtoWithRequestId(itemRepository.save(toItemDbWithRequest(itemDto, userFromDb, request)));
         }
-        if (itemDto.getName().isEmpty() || itemDto.getDescription().isEmpty()) {
-            throw new EmptyFieldException("Поля для ввода не должны быть пусты!");
-        }
-        UserDto userFromDb = checkUserId(userId);
-        return toItemDto(itemRepository.save(toItemDb(itemDto, toUser(userFromDb))));
+        return toItemDto(itemRepository.save(toItemDb(itemDto, userFromDb)));
     }
 
     @Override
     public ItemDto updateItem(ItemDto itemDto, long userId) {
-        checkUserId(userId);
-        Item itemToUpdate = toItemUpdate(itemDto, itemRepository.findById(itemDto.getId())
-                .orElseThrow(() -> new EntityNotFoundException("Предмета с таким Id не существует! Id: " + itemDto.getId())));
+        userValidator.validateUserId(userId);
+        Item itemToUpdate = toItemUpdate(itemDto, itemValidator.validateItemIdAndReturnIt(itemDto.getId()));
         itemRepository.save(itemToUpdate);
         return toItemDto(itemToUpdate);
     }
 
     @Override
     public ItemDto getItemById(long itemId, long userId) {
-        checkUserId(userId);
+        userValidator.validateUserId(userId);
+        Item itemFromDb = itemValidator.validateItemIdAndReturnIt(itemId);
+
         List<CommentDto> commentsForItem = commentRepository.findAllByItem_Id(itemId)
                 .stream()
                 .map(CommentMapper::toCommentDto)
@@ -84,26 +91,24 @@ public class ItemServiceDbImpl implements ItemService {
                 .collect(Collectors.toList());
 
         if (!bookingsForItem.isEmpty() && !commentsForItem.isEmpty()) {
-            return toItemDtoWithBookingsAndComments(itemRepository.findById(itemId)
-                    .orElseThrow(() -> new EntityNotFoundException("There is no Item with Id: " + itemId)), bookingsForItem, commentsForItem);
+            return toItemDtoWithBookingsAndComments(itemFromDb, bookingsForItem, commentsForItem);
         } else if (!bookingsForItem.isEmpty()) {
-            return toItemDtoWithBookings(itemRepository.findById(itemId)
-                    .orElseThrow(() -> new EntityNotFoundException("There is no Item with Id: " + itemId)), bookingsForItem);
+            return toItemDtoWithBookings(itemFromDb, bookingsForItem);
         } else if (!commentsForItem.isEmpty()) {
-            return toItemDtoWithComments(itemRepository.findById(itemId)
-                    .orElseThrow(() -> new EntityNotFoundException("There is no Item with Id: " + itemId)), commentsForItem);
+            return toItemDtoWithComments(itemFromDb, commentsForItem);
         } else {
-            return toItemDto(itemRepository.findById(itemId)
-                    .orElseThrow(() -> new EntityNotFoundException("There is no Item with Id: " + itemId)));
+            return toItemDto(itemFromDb);
         }
     }
 
     @Override
-    public Collection<ItemDto> getItemsByUserId(long userId) {
-        UserDto userFromDb = checkUserId(userId);
+    public Collection<ItemDto> getItemsByUserId(long userId, Pageable page) {
+        userValidator.validateUserId(userId);
+        Pageable pageForItems = PageRequest.of(page.getPageNumber(), page.getPageSize(), Sort.by(Sort.Direction.ASC, "id"));
+        Pageable pageForComments = PageRequest.of(page.getPageNumber(), page.getPageSize(), Sort.by(Sort.Direction.DESC, "created"));
 
-        List<Item> userItems = new ArrayList<>(itemRepository.findByOwner_Id(userFromDb.getId(), Sort.by(Sort.Direction.ASC, "id")));
-        List<CommentDto> commentsToUserItems = commentRepository.findAllItemByUserId(userId, Sort.by(Sort.Direction.DESC, "created"))
+        List<Item> userItems = new ArrayList<>(itemRepository.findByOwner_Id(userId, pageForItems));
+        List<CommentDto> commentsToUserItems = commentRepository.findAllItemByUserId(userId, pageForComments)
                 .stream().map(CommentMapper::toCommentDto).collect(Collectors.toList());
         List<BookingDto> bookingsToUserItems = getOwnerBooking(userId);
 
@@ -128,18 +133,20 @@ public class ItemServiceDbImpl implements ItemService {
     }
 
     @Override
-    public Collection<ItemDto> getItemsBySearching(String text) {
+    public Collection<ItemDto> getItemsBySearching(String text, Pageable page) {
         if (text.isEmpty()) {
             return new ArrayList<>();
         }
-        return itemRepository.search(text).stream()
+        return itemRepository.search(text, page).stream()
                 .map(ItemMapper::toItemDto)
                 .collect(Collectors.toList());
     }
 
     @Override
     public ItemDto checkItemOwner(Long itemId, Long ownerId) {
-        ItemDto itemDto = toItemDto(itemRepository.findById(itemId).get());
+        Item itemFromDb = itemValidator.validateItemIdAndReturnIt(itemId);
+
+        ItemDto itemDto = toItemDto(itemFromDb);
         if (!Objects.equals(itemDto.getOwnerId(), ownerId)) {
             throw new EntityNotFoundException("Пользователь с id " + ownerId + " не является владельцем");
         }
@@ -148,10 +155,11 @@ public class ItemServiceDbImpl implements ItemService {
 
     @Override
     public CommentDto addCommentToItem(Long userId, Long itemId, CommentDto commentDto) {
-        if (commentDto.getText().isEmpty()) {
-            throw new IncorrectDataException("Комментарий не может быть пуст!");
-        }
-        UserDto author = checkUserId(userId);
+
+        User author = userValidator.validateUserIdAndReturnIt(userId);
+        itemValidator.validateItemId(itemId);
+        itemValidator.validateCommentData(commentDto);
+        commentDto.setCreated(LocalDateTime.now());
         List<BookingDto> bookings = bookingRepository.findAllByUserIdAndItemIdAndEndDateIsPassed(userId, itemId, LocalDateTime.now())
                 .stream()
                 .map(BookingMapper::toBookingDto)
@@ -160,16 +168,8 @@ public class ItemServiceDbImpl implements ItemService {
             throw new IncorrectDataException("У этого пользователя нет забронированных вещей.");
         }
         ItemDto item = getItemById(itemId, userId);
-        commentDto = toCommentDto(commentRepository.save(CommentMapper.toCommentDb(commentDto, toUser(author), toItem(item))));
+        commentDto = toCommentDto(commentRepository.save(CommentMapper.toCommentDb(commentDto, author, toItem(item))));
         return commentDto;
-    }
-
-    private UserDto checkUserId(long userId) {
-        if (userId == -1) {
-            throw new IncorrectDataException("Пользователя с таким id не существует!");
-        }
-        return toUserDto(userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("Пользователя с таким id не существует! id"
-                + userId)));
     }
 
     private List<BookingDto> getOwnerBooking(Long ownerId) {

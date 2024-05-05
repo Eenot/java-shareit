@@ -2,9 +2,10 @@ package ru.practicum.shareit.item.model.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.CreationTimestamp;
+import lombok.Setter;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -20,10 +21,12 @@ import java.time.LocalDateTime;
 
 @Entity
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @Table(name = "comments")
+@EqualsAndHashCode
 public class Comment {
 
     @Id
@@ -36,7 +39,6 @@ public class Comment {
     @ManyToOne
     @JoinColumn(name = "item_id")
     private Item item;
-    @CreationTimestamp
     private LocalDateTime created;
 
     public Long itemId() {

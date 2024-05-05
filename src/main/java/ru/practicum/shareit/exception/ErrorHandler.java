@@ -24,7 +24,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public String handleEmptFieldException(EmptyFieldException e) {
+    public String handleEmptyFieldException(EmptyFieldException e) {
         return String.format("Ошибка! Поле не может быть пустым: %s", e.getMessage());
     }
 
@@ -38,5 +38,11 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> handleUnsupportedStateException(UnsupportedStatusException e) {
         return Map.of("error", "Unknown state: " + e.getMessage());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public String handleUnsupportedMethodException(UnsupportedMethodException e) {
+        return String.format("Ошибка! Несуществующий метод: %s", e.getMessage());
     }
 }

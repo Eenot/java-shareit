@@ -15,7 +15,7 @@ import java.util.Set;
 
 @Component
 @Slf4j
-public class UserRepositoryImpl implements UserRepository {
+public class UserRepositoryInMemoryImpl implements UserRepository {
 
     private final Map<Long, User> users = new HashMap<>();
     private final Set<String> uniqueEmailSet = new HashSet<>();

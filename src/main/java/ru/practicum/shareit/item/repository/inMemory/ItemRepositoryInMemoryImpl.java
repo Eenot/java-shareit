@@ -18,7 +18,7 @@ import java.util.stream.IntStream;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ItemRepositoryImpl implements ItemRepository {
+public class ItemRepositoryInMemoryImpl implements ItemRepository {
 
     private final UserRepository userRepository;
     private final Map<Long, List<Item>> items = new HashMap<>();

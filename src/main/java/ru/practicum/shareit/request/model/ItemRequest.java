@@ -1,16 +1,39 @@
 package ru.practicum.shareit.request.model;
 
 
-import lombok.Data;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
+import org.hibernate.annotations.CreationTimestamp;
+import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.Table;
+import java.time.LocalDateTime;
+import java.util.List;
 
-@Data
+@Getter
+@Setter
+@ToString
+@Builder
+@Entity
+@Table(name = "requests")
+@AllArgsConstructor
+@NoArgsConstructor
+@EqualsAndHashCode
 public class ItemRequest {
 
     @Id
@@ -19,5 +42,10 @@ public class ItemRequest {
     private String description;
     @ManyToOne
     @JoinColumn(name = "requester_id")
-    private User requestor;
+    private User requester;
+    @Column(name = "creation_date")
+    @CreationTimestamp
+    private LocalDateTime creationDate;
+    @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
+    List<Item> responsesToRequest;
 }
