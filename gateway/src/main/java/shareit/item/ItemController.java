@@ -16,10 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shareit.validator.ItemValidator;
 import shareit.validator.PageableValidator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
-import java.time.LocalDateTime;
-import java.util.Collection;
 
 import static shareit.constants.Headers.USER_ID;
 

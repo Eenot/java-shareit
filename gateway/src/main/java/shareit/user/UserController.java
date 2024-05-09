@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;
-import java.util.Collection;
 
 @Controller
 @Slf4j
@@ -48,7 +47,7 @@ public class UserController {
     public ResponseEntity<Object> updateUser(@PathVariable @Positive long userId, @Valid @RequestBody UserDto userDto) {
         log.debug("Gateway: Обновление пользователя с ID: {}", userId);
         userDto.setId(userId);
-        return userClient.updateUser(userId,userDto);
+        return userClient.updateUser(userId, userDto);
     }
 
     @DeleteMapping("/{userId}")

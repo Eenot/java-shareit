@@ -15,9 +15,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import shareit.validator.ItemRequestValidator;
 import shareit.validator.PageableValidator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;
-import java.util.Collection;
 
 import static shareit.constants.Headers.USER_ID;
 

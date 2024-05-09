@@ -30,7 +30,7 @@ public class RequestClient extends BaseClient {
     }
 
     public ResponseEntity<Object> getAllUserItemsWithResponses(long userId) {
-        return get("",userId);
+        return get("", userId);
     }
 
     public ResponseEntity<Object> getAllCreatedRequests(long userId, Integer from, Integer size) {
