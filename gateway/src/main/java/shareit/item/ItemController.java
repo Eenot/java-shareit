@@ -18,8 +18,6 @@ import shareit.validator.PageableValidator;
 
 import javax.validation.constraints.Positive;
 
-import static shareit.constants.Headers.USER_ID;
-
 @Controller
 @RequestMapping(path = "/items")
 @RequiredArgsConstructor
@@ -32,14 +30,14 @@ public class ItemController {
     private final ItemClient itemClient;
 
     @PostMapping
-    public ResponseEntity<Object> createItem(@RequestBody ItemDto itemDto, @RequestHeader(USER_ID) @Positive long userId) {
+    public ResponseEntity<Object> createItem(@RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         itemValidator.validateItemData(itemDto);
         log.debug("Gateway: Создание элемента {}", itemDto);
         return itemClient.createItem(userId, itemDto);
     }
 
     @PatchMapping("/{itemId}")
-    public ResponseEntity<Object> updateItem(@PathVariable @Positive long itemId, @RequestBody ItemDto itemDto, @RequestHeader(USER_ID) @Positive long userId) {
+    public ResponseEntity<Object> updateItem(@PathVariable @Positive long itemId, @RequestBody ItemDto itemDto, @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         itemValidator.validateItemDataUpdate(itemDto);
         log.debug("Gateway: Обновление элемента с id {}", itemId);
         itemDto.setId(itemId);
@@ -47,7 +45,7 @@ public class ItemController {
     }
 
     @GetMapping("/{itemId}")
-    public ResponseEntity<Object> getItemById(@PathVariable @Positive long itemId, @RequestHeader(USER_ID) @Positive long userId) {
+    public ResponseEntity<Object> getItemById(@PathVariable @Positive long itemId, @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         log.debug("Gateway: Получение элемента с id : {} ", itemId);
         return itemClient.getItemById(userId, itemId);
     }
@@ -55,7 +53,7 @@ public class ItemController {
     @GetMapping()
     public ResponseEntity<Object> getUserItems(@RequestParam(defaultValue = "0") Integer from,
                                                @RequestParam(defaultValue = "10") Integer size,
-                                               @RequestHeader(USER_ID) @Positive long userId) {
+                                               @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         log.debug("Gateway: Получение всех вещей пользователя с id {}", userId);
         return itemClient.getItemsByUserId(userId, from, size);
@@ -65,7 +63,7 @@ public class ItemController {
     public ResponseEntity<Object> getItemsBySearching(@RequestParam(defaultValue = "0") Integer from,
                                                       @RequestParam(defaultValue = "10") Integer size,
                                                       @RequestParam String text,
-                                                      @RequestHeader(USER_ID) @Positive long userId) {
+                                                      @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         log.debug("Gateway: Получение вещей при помощи поиска по запросу: {}", text);
         return itemClient.getItemsBySearching(userId, from, size, text);
@@ -74,7 +72,7 @@ public class ItemController {
     @PostMapping("/{itemId}/comment")
     public ResponseEntity<Object> createCommentToItem(@PathVariable @Positive Long itemId,
                                                       @RequestBody CommentDto comment,
-                                                      @RequestHeader(USER_ID) @Positive long userId) {
+                                                      @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         itemValidator.validateCommentData(comment);
         log.debug("Gateway: Создание отзыва на вещь от пользователя с id {}", userId);
         return itemClient.addCommentToItem(userId, itemId, comment);
