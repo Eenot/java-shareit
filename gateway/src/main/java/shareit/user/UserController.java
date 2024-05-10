@@ -51,8 +51,8 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public void deleteUser(@PathVariable @Positive long userId) {
+    public ResponseEntity<Object> deleteUser(@PathVariable @Positive long userId) {
         log.debug("Gateway: Удаление пользователя с ID: {}", userId);
-        userClient.deleteUser(userId);
+        return userClient.deleteUser(userId);
     }
 }
