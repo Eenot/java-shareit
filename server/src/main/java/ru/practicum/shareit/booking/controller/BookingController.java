@@ -17,7 +17,6 @@ import ru.practicum.shareit.booking.dto.BookingDto;
 import ru.practicum.shareit.booking.service.BookingService;
 import ru.practicum.shareit.validator.PageableValidator;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 import static ru.practicum.shareit.constants.Headers.USER_ID;

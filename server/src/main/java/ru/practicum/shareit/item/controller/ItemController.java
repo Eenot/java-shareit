@@ -18,11 +18,7 @@ import ru.practicum.shareit.item.dto.comment.CommentDto;
 import ru.practicum.shareit.item.service.ItemService;
 import ru.practicum.shareit.validator.PageableValidator;
 
-import javax.servlet.http.HttpServletRequest;
-import java.time.LocalDateTime;
 import java.util.Collection;
-
-import static ru.practicum.shareit.constants.Headers.USER_ID;
 
 
 @RestController
