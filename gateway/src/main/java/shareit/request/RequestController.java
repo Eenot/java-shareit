@@ -17,6 +17,8 @@ import shareit.validator.PageableValidator;
 
 import javax.validation.constraints.Positive;
 
+import static shareit.constants.Headers.USER_ID;
+
 @Controller
 @RequestMapping(path = "/requests")
 @Slf4j
@@ -30,14 +32,14 @@ public class RequestController {
 
     @PostMapping
     public ResponseEntity<Object> addNewRequest(@RequestBody ItemRequestDto requestDto,
-                                                @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                @RequestHeader(USER_ID) @Positive long userId) {
         itemRequestValidator.validateItemRequestData(requestDto);
         log.debug("Gateway: Создание запроса на вещь: {}", requestDto);
         return requestClient.createRequest(userId, requestDto);
     }
 
     @GetMapping
-    public ResponseEntity<Object> getAllUserItemsWithResponses(@RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+    public ResponseEntity<Object> getAllUserItemsWithResponses(@RequestHeader(USER_ID) @Positive long userId) {
         log.debug("Gateway: Получение списка запросов пользователя!");
         return requestClient.getAllUserItemsWithResponses(userId);
     }
@@ -45,14 +47,15 @@ public class RequestController {
     @GetMapping("/all")
     public ResponseEntity<Object> getAllCreatedRequests(@RequestParam(defaultValue = "0") Integer from,
                                                         @RequestParam(defaultValue = "10") Integer size,
-                                                        @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                        @RequestHeader(USER_ID) @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         log.debug("Gateway: Получение списка всех созданных запросов!");
         return requestClient.getAllCreatedRequests(userId, from, size);
     }
 
     @GetMapping("/{requestId}")
-    public ResponseEntity<Object> getRequestById(@PathVariable @Positive Long requestId, @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+    public ResponseEntity<Object> getRequestById(@PathVariable @Positive Long requestId,
+                                                 @RequestHeader(USER_ID) @Positive long userId) {
         log.debug("Gateway: Получение запроса на вещь с Id: {}", requestId);
         return requestClient.getRequestById(userId, requestId);
     }

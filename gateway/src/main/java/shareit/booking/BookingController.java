@@ -20,6 +20,8 @@ import shareit.validator.PageableValidator;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Positive;
 
+import static shareit.constants.Headers.USER_ID;
+
 @Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
@@ -34,7 +36,7 @@ public class BookingController {
 
     @PostMapping
     public ResponseEntity<Object> createBooking(@RequestBody BookingDto bookingDto,
-                                                @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                @RequestHeader(USER_ID) @Positive long userId) {
         bookingValidator.validateBookingData(bookingDto);
         log.info("Gateway: Создание бронирования : {}", bookingDto.getId());
         return bookingClient.createBooking(userId, bookingDto);
@@ -43,7 +45,7 @@ public class BookingController {
     @PatchMapping("/{bookingId}")
     public ResponseEntity<Object> approveBooking(@PathVariable @Positive Long bookingId,
                                                  @RequestParam @NotNull String approved,
-                                                 @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                 @RequestHeader(USER_ID) @Positive long userId) {
         if (!approved.equals("true") && !approved.equals("false")) {
             throw new IncorrectDataException("Статус подтверждения может быть только TRUE или FALSE");
         }
@@ -55,7 +57,7 @@ public class BookingController {
     public ResponseEntity<Object> getAllBookingsForUser(@RequestParam(defaultValue = "ALL") String state,
                                                         @RequestParam(defaultValue = "0") Integer from,
                                                         @RequestParam(defaultValue = "10") Integer size,
-                                                        @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                        @RequestHeader(USER_ID) @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         bookingValidator.validateBookingState(state);
         log.info("Gateway: Получение информации о бронированиях пользователя");
@@ -66,7 +68,7 @@ public class BookingController {
     public ResponseEntity<Object> getAllBookingsForOwner(@RequestParam(defaultValue = "ALL") String state,
                                                          @RequestParam(defaultValue = "0") Integer from,
                                                          @RequestParam(defaultValue = "10") Integer size,
-                                                         @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                         @RequestHeader(USER_ID) @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         bookingValidator.validateBookingState(state);
         log.info("Gateway: Получение информации о забронированных вещах владельца");
@@ -75,7 +77,7 @@ public class BookingController {
 
     @GetMapping("/{bookingId}")
     public ResponseEntity<Object> getInfoForBooking(@PathVariable Long bookingId,
-                                                    @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
+                                                    @RequestHeader(USER_ID) @Positive long userId) {
         log.info("Получение информации о бронировании: {}", bookingId);
         return bookingClient.getInfoForBooking(userId, bookingId);
     }
