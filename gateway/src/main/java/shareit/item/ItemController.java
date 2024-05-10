@@ -56,7 +56,7 @@ public class ItemController {
                                                @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         pageableValidator.checkingPageableParams(from, size);
         log.debug("Gateway: Получение всех вещей пользователя с id {}", userId);
-        return itemClient.getItemsByUserId(userId, from, size);
+        return itemClient.getUserItems(userId, from, size);
     }
 
     @GetMapping("/search")
@@ -75,6 +75,6 @@ public class ItemController {
                                                       @RequestHeader("X-Sharer-User-Id") @Positive long userId) {
         itemValidator.validateCommentData(comment);
         log.debug("Gateway: Создание отзыва на вещь от пользователя с id {}", userId);
-        return itemClient.addCommentToItem(userId, itemId, comment);
+        return itemClient.createCommentToItem(userId, itemId, comment);
     }
 }

@@ -58,7 +58,7 @@ public class ItemServiceDbImpl implements ItemService {
 
     @Override
     public ItemDto createItem(ItemDto itemDto, long userId) {
-        itemValidator.validateItemData(itemDto);
+        //itemValidator.validateItemData(itemDto);
         User userFromDb = userValidator.validateUserIdAndReturnIt(userId);
         if (itemDto.getRequestId() != null) {
             ItemRequest request = itemRequestRepository.findById(itemDto.getRequestId())

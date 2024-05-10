@@ -8,7 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.hibernate.annotations.CreationTimestamp;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.user.model.User;
 
@@ -44,7 +43,6 @@ public class ItemRequest {
     @JoinColumn(name = "requester_id")
     private User requester;
     @Column(name = "creation_date")
-    @CreationTimestamp
     private LocalDateTime creationDate;
     @OneToMany(mappedBy = "request", cascade = CascadeType.ALL)
     List<Item> responsesToRequest;

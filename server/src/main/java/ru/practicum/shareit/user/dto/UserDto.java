@@ -6,13 +6,18 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Data
+import javax.validation.constraints.Email;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
 public class UserDto {
 
     private Long id;
     private String name;
+    @Email(message = "Некорретный адрес эл. почты!")
     private String email;
 }
+
+
