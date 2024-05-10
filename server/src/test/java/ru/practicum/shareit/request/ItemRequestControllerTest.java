@@ -24,6 +24,7 @@ import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.constants.Headers.USER_ID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -49,7 +50,8 @@ class ItemRequestControllerTest {
 
         String result = mockMvc.perform(post("/requests")
                         .content(objectMapper.writeValueAsString(itemRequestToCreate))
-                        .contentType("application/json"))
+                        .contentType("application/json")
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -61,7 +63,8 @@ class ItemRequestControllerTest {
     @SneakyThrows
     @Test
     void getAllUserItemsWithResponses() {
-        mockMvc.perform(get("/requests"))
+        mockMvc.perform(get("/requests")
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
 
         verify(itemRequestService, times(1)).getAllUserRequestsWithResponses(anyLong());
@@ -74,7 +77,8 @@ class ItemRequestControllerTest {
 
         mockMvc.perform(get("/requests/all")
                         .param("from", "1")
-                        .param("size", "1"))
+                        .param("size", "1")
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
 
         verify(itemRequestService, times(1)).getAllRequestsToResponse(anyLong(), any(Pageable.class));
@@ -84,7 +88,8 @@ class ItemRequestControllerTest {
     @Test
     void getRequestById() {
         long requestId = 0L;
-        mockMvc.perform(get("/requests/{requestId}", requestId))
+        mockMvc.perform(get("/requests/{requestId}", requestId)
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
 
         verify(itemRequestService, times(1)).getRequestById(anyLong(), anyLong());

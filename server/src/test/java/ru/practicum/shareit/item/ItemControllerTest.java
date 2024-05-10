@@ -27,6 +27,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static ru.practicum.shareit.constants.Headers.USER_ID;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -52,7 +53,7 @@ class ItemControllerTest {
 
         String result = mockMvc.perform(post("/items")
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(itemToCreate)))
+                        .content(objectMapper.writeValueAsString(itemToCreate)).header(USER_ID, 1L))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -75,7 +76,8 @@ class ItemControllerTest {
 
         String result = mockMvc.perform(patch("/items/{itemId}", itemToCreate.getId())
                         .contentType("application/json")
-                        .content(objectMapper.writeValueAsString(itemToCreate)))
+                        .content(objectMapper.writeValueAsString(itemToCreate))
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk())
                 .andReturn()
                 .getResponse()
@@ -88,7 +90,8 @@ class ItemControllerTest {
     @Test
     void getItemById() {
         long itemId = 0L;
-        mockMvc.perform(get("/items/{itemId}", itemId))
+        mockMvc.perform(get("/items/{itemId}", itemId)
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
 
         verify(itemService, times(1)).getItemById(anyLong(), anyLong());
@@ -100,7 +103,7 @@ class ItemControllerTest {
         mockMvc.perform(get("/items")
                         .param("from", "1")
                         .param("size", "1")
-                        .header("X-Sharer-User-Id", "1"))
+                        .header(USER_ID, "1"))
                 .andExpect(status().isOk());
         doNothing().when(pageableValidator).checkingPageableParams(anyInt(), anyInt());
 
@@ -114,7 +117,8 @@ class ItemControllerTest {
         mockMvc.perform(get("/items/search")
                         .param("text", "text")
                         .param("from", "1")
-                        .param("size", "1"))
+                        .param("size", "1")
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
         doNothing().when(pageableValidator).checkingPageableParams(anyInt(), anyInt());
 
@@ -131,7 +135,7 @@ class ItemControllerTest {
 
         String result = mockMvc.perform(post("/items/{itemId}/comment", itemId)
                         .contentType("application/json")
-                        .header("X-Sharer-User-Id", "1")
+                        .header(USER_ID, "1")
                         .content(objectMapper.writeValueAsString(commentToCreate)))
                 .andExpect(status().isOk())
                 .andReturn()

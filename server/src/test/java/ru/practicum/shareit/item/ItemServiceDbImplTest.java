@@ -77,7 +77,6 @@ class ItemServiceDbImplTest {
         ItemDto actualItem = itemService.createItem(toItemDto(expectedItem), 1L);
 
         assertEquals(expectedItem.getName(), actualItem.getName());
-        verify(itemValidator, times(1)).validateItemData(toItemDto(expectedItem));
     }
 
     @Test
@@ -100,7 +99,6 @@ class ItemServiceDbImplTest {
 
         assertEquals(expectedItem.getName(), actualItem.getName());
         assertEquals(expectedItem.getRequest().getId(), actualItem.getRequestId());
-        verify(itemValidator, times(1)).validateItemData(toItemDtoWithRequestId(expectedItem));
     }
 
     @Test

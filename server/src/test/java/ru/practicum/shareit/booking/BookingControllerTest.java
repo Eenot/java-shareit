@@ -52,6 +52,7 @@ class BookingControllerTest {
 
         String result = mockMvc.perform(post("/bookings")
                         .content(objectMapper.writeValueAsString(bookingToCreate))
+                        .header(USER_ID, 1L)
                         .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -75,6 +76,7 @@ class BookingControllerTest {
         String result = mockMvc.perform(patch("/bookings/{bookingId}", bookingToCreate.getId())
                         .contentType("application/json")
                         .content(objectMapper.writeValueAsString(bookingToCreate))
+                        .header(USER_ID, 1L)
                         .param("approved", "true"))
                 .andExpect(status().isOk())
                 .andReturn()
@@ -116,7 +118,8 @@ class BookingControllerTest {
     @Test
     void shouldGetInfoForBookingTest() {
         long bookingId = 0L;
-        mockMvc.perform(get("/bookings/{bookingId}", bookingId))
+        mockMvc.perform(get("/bookings/{bookingId}", bookingId)
+                        .header(USER_ID, 1L))
                 .andExpect(status().isOk());
 
         verify(bookingService, times(1)).getBookingInfo(anyLong(), anyLong());
