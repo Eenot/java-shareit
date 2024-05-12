@@ -21,12 +21,13 @@ public class BookingValidator {
     }
 
     public void validateBookingData(BookingDto bookingDto) {
+        LocalDateTime thisMomentTimer = LocalDateTime.now();
         if (bookingDto.getStart() == null || bookingDto.getEnd() == null) {
             throw new IncorrectDataException("Бронирование: Даты пусты!");
         }
 
         if (bookingDto.getEnd().isBefore(bookingDto.getStart()) || bookingDto.getStart().isEqual(bookingDto.getEnd())
-                || bookingDto.getEnd().isBefore(LocalDateTime.now()) || bookingDto.getStart().isBefore(LocalDateTime.now())) {
+                || bookingDto.getEnd().isBefore(thisMomentTimer) || bookingDto.getStart().isBefore(thisMomentTimer)) {
             throw new IncorrectDataException("Бронирование: Проблемы в датах");
         }
     }

@@ -28,8 +28,7 @@ import static shareit.constants.Headers.USER_ID;
 @Slf4j
 @Validated
 public class BookingController {
-
-
+    
     private final BookingClient bookingClient;
     private final PageableValidator pageableValidator;
     private final BookingValidator bookingValidator;
